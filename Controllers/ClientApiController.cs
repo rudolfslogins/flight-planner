@@ -1,51 +1,52 @@
 ﻿using flight_planner.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using flight_planner.services;
 
 namespace flight_planner.Controllers
 {
-    public class ClientApiController : ApiController
+    public class ClientApiController : BasicApiController
     {
+        private readonly FlightService _flightService;
+
+        public ClientApiController()
+        {
+            _flightService = new FlightService();
+        }
 
         [HttpGet]
         [Route("api/flights/{id}")]
-        public async Task<HttpResponseMessage> GetFlightById(HttpRequestMessage request, int id)
+        public async Task<IHttpActionResult> GetFlightById(int id)
         {
-
-            var flight = FlightStorage.GetFlightById(id);
+            var flight = await _flightService.GetFlightById(id);
             if (flight == null)
             {
-                return request.CreateResponse(HttpStatusCode.NotFound);
+                return NotFound();
             }
-
-            return request.CreateResponse(HttpStatusCode.OK, flight);
+            return Ok(ConvertToFlightRequest(flight));
         }
 
         [HttpGet]
         [Route("api/airports")]
-        public List<AirportRequest> GetAirport(string search)
+        public async Task<IHttpActionResult> GetAirport(string search)
         {
-            return FlightStorage.GetAirport(search);
+            var airports = await _flightService.GetAirport(search.Trim().ToLowerInvariant());
+            return Ok(airports.Select((ConvertToAirportRequest)).ToList());
         }
 
         [HttpPost]
         [Route("api/flights/search")]
-        public async Task<HttpResponseMessage> PostFlightSearch(HttpRequestMessage request, FlightSearch flight)
+        public async Task<IHttpActionResult> PostFlightSearch(FlightSearch flight)
         {
-
             if (!IsValid(flight))
             {
-                return request.CreateResponse(HttpStatusCode.BadRequest);
+                return BadRequest();
             }
-            var flights = FlightStorage.GetFlights(flight.From, flight.To, flight.DepartureDate);
-            var response = new FlightSearchResponse(flights);
+            var flights = await _flightService.GetFlights(flight.From, flight.To, flight.DepartureDate);
+            var response = new FlightSearchResponse(flights.Select((ConvertToFlightRequest)).Distinct().ToList());
 
-            return request.CreateResponse(HttpStatusCode.OK, response);
+            return Ok(response);
         }
 
         private static bool IsValid(FlightSearch flightSearch)

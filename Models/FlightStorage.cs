@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using flight_planner.Models;
 using System.Collections.Concurrent;
 using System.Linq;
+using flight_planner.core.Models;
 
 namespace flight_planner.Models
 {
@@ -42,7 +43,7 @@ namespace flight_planner.Models
             foreach (var flight in _flights)
             {
                 DateTime flightDate = DateTime.Parse(flight.DepartureTime);
-                if (flight.From.Airport == from && flight.To.Airport == to && flightDate.Date == departureDate.Date)
+                if (flight.From.AirportCode == from && flight.To.AirportCode == to && flightDate.Date == departureDate.Date)
                 {
                     result.Add(flight);
                 }
@@ -72,26 +73,26 @@ namespace flight_planner.Models
             return _id++;
         }
 
-        public static List<AirportRequest> GetAirport(string search)
-        {
-            StringComparison comp = StringComparison.OrdinalIgnoreCase;
-            var airports = new List<AirportRequest>();
-            foreach (var keyValuePair in _flights)
-            {
+        //public static List<Airport> GetAirport(string search)
+        //{
+        //    StringComparison comp = StringComparison.OrdinalIgnoreCase;
+        //    var airports = new List<Airport>();
+        //    foreach (var keyValuePair in _flights)
+        //    {
 
-                if (keyValuePair.From.Contains(search, comp))
-                {
-                    if (!airports.Contains(keyValuePair.From))
-                        airports.Add(keyValuePair.From);
-                }
+        //        if (keyValuePair.From.Contains(search, comp))
+        //        {
+        //            if (!airports.Contains(keyValuePair.From))
+        //                airports.Add(keyValuePair.From);
+        //        }
 
-                if (keyValuePair.To.Contains(search, comp))
-                {
-                    if (!airports.Contains(keyValuePair.To))
-                        airports.Add(keyValuePair.To);
-                }
-            }
-            return airports;
-        }
+        //        if (keyValuePair.To.Contains(search, comp))
+        //        {
+        //            if (!airports.Contains(keyValuePair.To))
+        //                airports.Add(keyValuePair.To);
+        //        }
+        //    }
+        //    return airports;
+        //}
     }
 }

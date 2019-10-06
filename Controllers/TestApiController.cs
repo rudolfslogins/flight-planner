@@ -3,19 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using flight_planner.Models;
+using flight_planner.services;
 
 namespace flight_planner.Controllers
 {
     public class TestApiController : ApiController
     {
+        private readonly FlightService _flightService;
+        public TestApiController()
+        {
+            _flightService = new FlightService();
+        }
         [HttpPost]
         [Route("testing-api/clear")]
-        public string Clear()
+        public async Task<IHttpActionResult> Clear()
         {
-            FlightStorage.ClearFlights();
-            return "OK";
+            await _flightService.ClearFlights();
+            return Ok();
         }
 
         [HttpGet]

@@ -1,17 +1,24 @@
 ﻿using System.Collections.Generic;
+using flight_planner.core.Models;
+using Newtonsoft.Json;
 
 namespace flight_planner.Models
 {
     public class FlightSearchResponse
     {
-        public List<Flight> Items { get; set; }
+        [JsonProperty(Order = 2)]
+        public List<FlightRequest> Items { get; set; }
+
+        [JsonProperty(Order = 1)]
         public int TotalItems { get; set; }
+
+        [JsonProperty(Order = -2)]
         public int Page { get; set; }
 
-        public FlightSearchResponse(List<Flight> items)
+        public FlightSearchResponse(List<FlightRequest> items)
         {
             Items = items;
-            TotalItems = Items.Count;
+            TotalItems = items.Count;
             Page = GetPage();
         }
 

@@ -8,13 +8,15 @@ namespace flight_planner.Models
         public string City { get; set; }
         public string Airport { get; set; }
 
-        public AirportRequest(string country, string city, string airport)
+        public AirportRequest(string country, string city, string airportCode)
         {
             Country = country;
             City = city;
-            Airport = airport;
+            Airport = airportCode;
         }
-
+        public AirportRequest()
+        {
+        }
         public override bool Equals(object obj)
         {
             var airport = obj as AirportRequest;
@@ -35,9 +37,10 @@ namespace flight_planner.Models
             if (!Enum.IsDefined(typeof(StringComparison), comp))
                 throw new ArgumentException("comp is not a member of StringComparison", nameof(comp));
 
-            return Country.IndexOf(substring.Trim(), comp) >= 0 || 
-                   City.IndexOf(substring.Trim(), comp) >= 0 || 
+            return Country.IndexOf(substring.Trim(), comp) >= 0 ||
+                   City.IndexOf(substring.Trim(), comp) >= 0 ||
                    Airport.IndexOf(substring.Trim(), comp) >= 0;
         }
+
     }
 }
