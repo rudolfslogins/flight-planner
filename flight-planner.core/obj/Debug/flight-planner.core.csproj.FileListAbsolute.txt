@@ -1,0 +1,12 @@
+D:\CODELEX\homeworks\flight-planner.core\bin\Debug\flight-planner.core.dll
+D:\CODELEX\homeworks\flight-planner.core\bin\Debug\flight-planner.core.pdb
+D:\CODELEX\homeworks\flight-planner.core\obj\Debug\flight-planner.core.csprojAssemblyReference.cache
+D:\CODELEX\homeworks\flight-planner.core\obj\Debug\flight-planner.core.csproj.CoreCompileInputs.cache
+D:\CODELEX\homeworks\flight-planner.core\obj\Debug\flight-planner.core.dll
+D:\CODELEX\homeworks\flight-planner.core\obj\Debug\flight-planner.core.pdb
+D:\CODELEX\homeworks\flight-planner.core\bin\Debug\MoreLinq.dll
+D:\CODELEX\homeworks\flight-planner.core\bin\Debug\System.ValueTuple.dll
+D:\CODELEX\homeworks\flight-planner.core\bin\Debug\MoreLinq.pdb
+D:\CODELEX\homeworks\flight-planner.core\bin\Debug\MoreLinq.xml
+D:\CODELEX\homeworks\flight-planner.core\bin\Debug\System.ValueTuple.xml
+D:\CODELEX\homeworks\flight-planner.core\obj\Debug\flight-planner.core.csproj.CopyComplete
