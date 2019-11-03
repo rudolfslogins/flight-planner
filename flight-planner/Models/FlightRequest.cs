@@ -11,14 +11,14 @@ namespace flight_planner.Models
         public string DepartureTime { get; set; }
         public string ArrivalTime { get; set; }
 
-        public FlightRequest(AirportRequest from, AirportRequest to, string carrier, string departureTime, string arrivalTime, int Id)
+        public FlightRequest(AirportRequest from, AirportRequest to, string carrier, string departureTime, string arrivalTime)
         {
             From = from;
             To = to;
             Carrier = carrier;
             DepartureTime = departureTime;
             ArrivalTime = arrivalTime;
-            id = Id;
+            //id = Id;
         }
 
         public FlightRequest()

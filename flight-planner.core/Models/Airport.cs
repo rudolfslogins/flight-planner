@@ -1,12 +1,15 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace flight_planner.core.Models
 {
-    public class Airport
+    public class Airport : Entity
     {
-        public int Id { get; set; }
+        [ConcurrencyCheck]
         public string Country { get; set; }
+        [ConcurrencyCheck]
         public string City { get; set; }
+        [ConcurrencyCheck]
         public string AirportCode { get; set; }
 
         public Airport(string country, string city, string airportCode)

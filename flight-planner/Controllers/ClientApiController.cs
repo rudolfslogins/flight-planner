@@ -2,17 +2,24 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Cors;
+using AutoMapper;
+using flight_planner.core.Models;
+using flight_planner.core.Services;
 using flight_planner.services;
+using MoreLinq;
 
 namespace flight_planner.Controllers
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ClientApiController : BasicApiController
     {
-        private readonly FlightService _flightService;
+        //private readonly FlightService _flightService;
+        protected readonly IAirportService _airportService;
 
-        public ClientApiController()
+        public ClientApiController(IAirportService airportService, IFlightService flightService, IMapper mapper) : base(flightService, mapper)
         {
-            _flightService = new FlightService();
+            _airportService = airportService;
         }
 
         [HttpGet]
@@ -24,15 +31,20 @@ namespace flight_planner.Controllers
             {
                 return NotFound();
             }
-            return Ok(ConvertToFlightRequest(flight));
+            //return Ok(ConvertToFlightRequest(flight));
+            return Ok(_mapper.Map<FlightRequest>(flight));
         }
 
         [HttpGet]
         [Route("api/airports")]
         public async Task<IHttpActionResult> GetAirport(string search)
         {
-            var airports = await _flightService.GetAirport(search.Trim().ToLowerInvariant());
-            return Ok(airports.Select((ConvertToAirportRequest)).ToList());
+            //var airports = await _flightService.GetAirport(search.Trim().ToLowerInvariant());
+            var airports = await _airportService.SearchAirports(search.Trim().ToLowerInvariant());
+            return Ok(airports
+                .Select((ConvertToAirportRequest))
+                .DistinctBy(f => new { f.City, f.Country, f.Airport })
+                .ToList());
         }
 
         [HttpPost]
@@ -42,9 +54,19 @@ namespace flight_planner.Controllers
             if (!IsValid(flight))
             {
                 return BadRequest();
+
             }
-            var flights = await _flightService.GetFlights(flight.From, flight.To, flight.DepartureDate);
-            var response = new FlightSearchResponse(flights.Select((ConvertToFlightRequest)).Distinct().ToList());
+            //var flights = await _flightService.GetFlights(flight.From, flight.To, flight.DepartureDate);
+            var flights = await _flightService.GetFlights();
+            var response = new FlightSearchResponse(flights.Select(f => _mapper.Map<FlightRequest>(f))
+                .Where(f => f.To.Airport == flight.To && 
+                            f.From.Airport == flight.From && 
+                            f.DepartureTime.Substring(0, 9) == flight.DepartureDate.Substring(0, 9))
+                .DistinctBy(f => new {f.ArrivalTime, f.DepartureTime, f.Carrier})
+                .ToList());
+
+            //var response = new FlightSearchResponse(flights.Select(ConvertToFlightRequest)
+            //    .GroupBy(f => new {f.ArrivalTime, f.DepartureTime, f.Carrier}).ToList());
 
             return Ok(response);
         }

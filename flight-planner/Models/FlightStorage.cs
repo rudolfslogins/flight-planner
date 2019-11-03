@@ -28,14 +28,14 @@ namespace flight_planner.Models
             }
         }
 
-        public static Flight GetFlightById(int id)
-        {
-            lock (ListLock)
-            {
-                var pair = _flights.FirstOrDefault(f => f.id == id);
-                return pair;
-            }
-        }
+        //public static Flight GetFlightById(int id)
+        //{
+        //    lock (ListLock)
+        //    {
+        //        var pair = _flights.FirstOrDefault(f => f.Entity.id == id);
+        //        return pair;
+        //    }
+        //}
 
         public static List<Flight> GetFlights(string from, string to, DateTime departureDate)
         {
@@ -57,16 +57,16 @@ namespace flight_planner.Models
             _id = 1;
         }
 
-        public static bool RemoveFlightById(int id)
-        {
-            {
-                var flight = GetFlightById(id);
+        //public static bool RemoveFlightById(int id)
+        //{
+        //    {
+        //        var flight = GetFlightById(id);
 
-                if (flight == null) return false;
-                _flights.Remove(flight);
-                return true;
-            }
-        }
+        //        if (flight == null) return false;
+        //        _flights.Remove(flight);
+        //        return true;
+        //    }
+        //}
 
         public static int GetNextId()
         {

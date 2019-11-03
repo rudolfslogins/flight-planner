@@ -2,20 +2,23 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Cors;
+using AutoMapper;
 using flight_planner.Attributes;
+using flight_planner.core.Services;
 using flight_planner.Models;
 using flight_planner.services;
 
 namespace flight_planner.Controllers
 {
     [BasicAuthentication]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class AdminApiController : BasicApiController
 
     {
-        private readonly FlightService _flightService;
-        public AdminApiController()
+        public AdminApiController(IFlightService flightService, IMapper mapper) : base(flightService, mapper)
         {
-            _flightService = new FlightService();
+            //_flightService = new FlightService();
         }
 
         [HttpGet]
@@ -27,15 +30,17 @@ namespace flight_planner.Controllers
             {
                 return NotFound();
             }
-            return Ok(ConvertToFlightRequest(flight));
+            //return Ok(ConvertToFlightRequest(flight));
+            return Ok(_mapper.Map<FlightRequest>(flight));
         }
 
         [HttpGet]
         [Route("admin-api/get/flights")]
         public async Task<IHttpActionResult> GetFlights()
         {
-            var flights = await _flightService.GetAllFlights();
-            return Ok(flights.Select((ConvertToFlightRequest)).ToList());
+            var flights = await _flightService.GetFlights();
+            //return Ok(flights.Select((ConvertToFlightRequest)).ToList());
+            return Ok(flights.Select(f => _mapper.Map<FlightRequest>(f)).ToList());
         }
 
         [HttpPut]
@@ -51,7 +56,7 @@ namespace flight_planner.Controllers
             {
                 return Conflict();
             }
-            flight.id = result.Id;
+            flight.id = result.Entity.Id;
             return Created("",flight);
         }
 
